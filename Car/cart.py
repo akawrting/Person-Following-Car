@@ -2,12 +2,12 @@ import socket
 from gpiozero import PWMOutputDevice, DigitalOutputDevice, DistanceSensor, RGBLED
 
 # GPIO pin setting
-PWMA = PWMOutputDevice(18)
-AIN1 = DigitalOutputDevice(22) #왼 바퀴 후진
-AIN2 = DigitalOutputDevice(27) #왼 바퀴 전진
-PWMB = PWMOutputDevice(23)
-BIN1 = DigitalOutputDevice(25) #오른 바퀴 후진
-BIN2 = DigitalOutputDevice(24) #오른 바퀴 전진
+leftMotorSpeed = PWMOutputDevice(18)
+leftMotorReverse = DigitalOutputDevice(22) #왼 바퀴 후진
+leftMotorForward = DigitalOutputDevice(27) #왼 바퀴 전진
+rightMotorSpeed = PWMOutputDevice(23)
+rightMotorReverse = DigitalOutputDevice(25) #오른 바퀴 후진
+rightMotorForward = DigitalOutputDevice(24) #오른 바퀴 전진
 
 front_sensor = DistanceSensor(echo=10, trigger=9, max_distance=2.0)
 left_sensor = DistanceSensor(echo=17, trigger=4, max_distance=2.0)
@@ -15,26 +15,26 @@ right_sensor = DistanceSensor(echo=8, trigger=7, max_distance=2.0)
 
 # motor operation
 def stop_motors():
-    PWMA.value = 0.0
-    PWMB.value = 0.0
+    leftMotorSpeed.value = 0.0
+    rightMotorSpeed.value = 0.0
 
 def move_forward():
-    AIN1.value, AIN2.value = 0, 1
-    BIN1.value, BIN2.value = 0, 1
-    PWMA.value = 1
-    PWMB.value = 1
+    leftMotorForward.value, leftMotorReverse.value = 1, 0
+    rightMotorForward.value, rightMotorReverse.value = 1, 0
+    leftMotorSpeed.value = 1
+    rightMotorSpeed.value = 1
 
 def turn_left():
-    AIN1.value, AIN2.value = 1, 0
-    BIN1.value, BIN2.value = 0, 1
-    PWMA.value = 0.4
-    PWMB.value = 0.4
+    leftMotorForward.value, leftMotorReverse.value = 0, 1
+    rightMotorForward.value, rightMotorReverse.value = 1, 0
+    leftMotorSpeed.value = 0.4
+    rightMotorSpeed.value = 0.4
 
 def turn_right():
-    AIN1.value, AIN2.value = 0, 1
-    BIN1.value, BIN2.value = 1, 0
-    PWMA.value = 0.4
-    PWMB.value = 0.4
+    leftMotorForward.value, leftMotorReverse.value = 1, 0
+    rightMotorForward.value, rightMotorReverse.value = 0, 1
+    leftMotorSpeed.value = 0.4
+    rightMotorSpeed.value = 0.4
 
 # udp setting
 UDP_IP = "0.0.0.0"   # 모든 인터페이스에서 수신
