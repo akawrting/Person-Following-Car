@@ -52,7 +52,7 @@ for chunk in stream.iter_content(chunk_size=1024):
                         if y1 > 50:
                             msg = "forward"
                         else: 
-                            msg = "stop"
+                            msg = "forward_close"
                     elif cx < 1280:
                         msg = "right"
                     sock.sendto(msg.encode(), (UDP_IP, UDP_PORT))

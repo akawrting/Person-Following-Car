@@ -55,22 +55,49 @@ while True:
     left_distance = left_sensor.distance * 100
     right_distance = right_sensor.distance * 100
 
-    if front_distance > 30:
-        print(front_distance)
-        if cmd == "left":
-            print("동작 A 실행")
-            turn_left()
-        elif cmd == "forward":
-            print("동작 B 실행")
-            move_forward()
-        elif cmd == "right":
-            print("동작 C 실행")
-            turn_right()
-        elif cmd == "stop":
-            print("stop")
-            stop_motors()
-        elif cmd == "q":
-            print("종료 명령 수신")
-            break
-    elif front_distance <= 30:
+    if cmd == "forward":
+        if front_distance > 30:
+            if left_distance < 15 and right_distance < 15:
+                stop_motors()
+            elif right_distance < 15:
+                turn_left()
+            elif left_distance < 15:
+                turn_right()
+            else:
+                move_forward()
+        
+        else:
+            if left_distance > right_distance:
+                turn_left()
+            
+            else:
+                turn_right()
+
+    elif cmd == "right":
+        turn_right()
+
+    elif cmd == "left":
+        turn_left()
+    
+    elif cmd == "forward_close":
         stop_motors()
+
+    # if front_distance > 30:
+    #     print(front_distance)
+    #     if cmd == "left":
+    #         print("동작 A 실행")
+    #         turn_left()
+    #     elif cmd == "forward":
+    #         print("동작 B 실행")
+    #         move_forward()
+    #     elif cmd == "right":
+    #         print("동작 C 실행")
+    #         turn_right()
+    #     elif cmd == "stop":
+    #         print("stop")
+    #         stop_motors()
+    #     elif cmd == "q":
+    #         print("종료 명령 수신")
+    #         break
+    # elif front_distance <= 30:
+    #     stop_motors()
