@@ -5,12 +5,12 @@ import numpy as np
 import requests
 import socket
 
-UDP_IP = "192.168.0.3"  # 예: "192.168.0.4"
+UDP_IP = "192.168.0.3"  # Car ip
 UDP_PORT = 5005
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 # MJPEG 스트리밍 URL
-url = "http://192.168.0.3:5000/video_feed"  # 예: http://192.168.0.10:5000/video_feed
+url = "http://192.168.0.3:5000/video_feed"  # Car_ip/video_feed
 stream = requests.get(url, stream=True)
 
 # YOLO 모델 로딩
