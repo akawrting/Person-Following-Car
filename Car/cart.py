@@ -1,4 +1,4 @@
-import socket
+import socket, time
 from gpiozero import PWMOutputDevice, DigitalOutputDevice, DistanceSensor, RGBLED
 
 # GPIO pin setting
@@ -23,6 +23,18 @@ def move_forward():
     rightMotorForward.value, rightMotorReverse.value = 1, 0
     leftMotorSpeed.value = 1
     rightMotorSpeed.value = 1
+
+def turn_left_soft():
+    leftMotorForward.value, leftMotorReverse.value = 0, 0
+    rightMotorForward.value, rightMotorReverse.value = 1, 0
+    leftMotorSpeed.value = 1
+    rightMotorSpeed.value = 1
+
+def turn_right_soft():
+    leftMotorForward.value, leftMotorReverse.value = 1, 0
+    rightMotorForward.value, rightMotorReverse.value = 0, 0
+    leftMotorSpeed.value = 1
+    rightMotorSpeed.value = 1 
 
 def turn_left():
     leftMotorForward.value, leftMotorReverse.value = 0, 1
@@ -55,23 +67,32 @@ while True:
     left_distance = left_sensor.distance * 100
     right_distance = right_sensor.distance * 100
 
+
     if cmd == "forward":
         if front_distance > 30:
             if left_distance < 15 and right_distance < 15:
                 stop_motors()
             elif right_distance < 15:
-                turn_left()
+                while right_distance < 30:
+                    turn_left_soft()
             elif left_distance < 15:
-                turn_right()
+                while left_distance < 30:
+                    turn_right_soft()
             else:
                 move_forward()
         
         else:
             if left_distance > right_distance:
-                turn_left()
+                turn_left_soft()
+                time.sleep(1)
+                move_forward()
+                time.sleep(0.2)
             
             else:
-                turn_right()
+                turn_right_soft()
+                time.sleep(1)
+                move_forward()
+                time.sleep(0.2)
 
     elif cmd == "right":
         turn_right()
@@ -82,22 +103,3 @@ while True:
     elif cmd == "forward_close":
         stop_motors()
 
-    # if front_distance > 30:
-    #     print(front_distance)
-    #     if cmd == "left":
-    #         print("동작 A 실행")
-    #         turn_left()
-    #     elif cmd == "forward":
-    #         print("동작 B 실행")
-    #         move_forward()
-    #     elif cmd == "right":
-    #         print("동작 C 실행")
-    #         turn_right()
-    #     elif cmd == "stop":
-    #         print("stop")
-    #         stop_motors()
-    #     elif cmd == "q":
-    #         print("종료 명령 수신")
-    #         break
-    # elif front_distance <= 30:
-    #     stop_motors()
