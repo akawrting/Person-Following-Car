@@ -14,7 +14,7 @@ url = "http://192.168.0.3:5000/video_feed"  # Car_ip/video_feed
 stream = requests.get(url, stream=True)
 
 # YOLO 모델 로딩
-model = YOLO("yolo11n.pt")
+model = YOLO("yolo11s.pt")
 model.conf = 0.4
 
 bytes_buffer = b""
@@ -42,7 +42,7 @@ for chunk in stream.iter_content(chunk_size=1024):
             classes = result.boxes.cls
 
             for box, conf, cls in zip(boxes, confidences, classes):
-                if int(cls) == 0:       # 사람만 필터링 (Class ID: 0)
+                if int(cls) == 0 and conf >= 0.6:       # 사람만 필터링 (Class ID: 0)
                     x1, y1, x2, y2 = map(int, box)
                     cx = x1 + (x2 - x1) / 2
                     # 메세지 전송
@@ -60,6 +60,8 @@ for chunk in stream.iter_content(chunk_size=1024):
                     label = f"Person {conf:.2f} x={cx} y={y1}"
                     cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
                     cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+                    
 
         # 결과 출력
         cv2.imshow("Person Detection", frame)
