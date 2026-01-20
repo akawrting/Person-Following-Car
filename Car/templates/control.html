@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Remote Control</title>
+    <style>
+        /* 버튼 및 스트리밍 컨테이너 스타일링 */
+        .control-container {
+            text-align: center;
+            margin: 20px;
+        }
+
+
+        /* 버튼 스타일링 */
+        .control-button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        h1 {
+            text-align: center; /* 가운데 정렬 */
+        }
+
+        .power_button {
+            margin: 10px;
+            background-color: #e74c3c;
+            color: white;
+            /* border: none;
+            border-radius: 5px; */
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>카트 원격 조종</h1>
+    <div class="control-container">
+        <button id="forward" class="control-button" onmousedown="sendCommand('forward')"
+                                                    onmouseup="sendCommand('stop')"
+                                                    ontouchstart="sendCommand('forward')"
+                                                    ontouchend="sendCommand('stop')">⬆</button>
+    </div>
+
+    <div class="control-container">
+        <button id="left" class="control-button" onmousedown="sendCommand('left')"
+                                                    onmouseup="sendCommand('stop')"
+                                                    ontouchstart="sendCommand('left')"
+                                                    ontouchend="sendCommand('stop')">⬅</button>
+
+        <button id="stop" class="control-button" onmousedown="sendCommand('stop')"
+                                                    onmouseup="sendCommand('stop')"
+                                                    ontouchstart="sendCommand('stop')"
+                                                    ontouchend="sendCommand('stop')">⏹</button>
+                                                    
+        <button id="right" class="control-button" onmousedown="sendCommand('right')"
+                                                    onmouseup="sendCommand('stop')"
+                                                    ontouchstart="sendCommand('right')"
+                                                    ontouchend="sendCommand('stop')">➡</button>
+    </div>
+
+    <div class="control-container">
+        <button id="backward" class="control-button" onmousedown="sendCommand('backward')"
+                                                    onmouseup="sendCommand('stop')"
+                                                    ontouchstart="sendCommand('backward')"
+                                                    ontouchend="sendCommand('stop')">⬇</button>
+    </div>
+   
+    <div>
+     &nbsp;
+    </div>
+
+    <div class="control-container">
+        <button id="power" class="power_button" onclick="sendCommand('power')">모드</button>
+    </div>
+
+    <script>
+        function sendCommand(command) {
+            fetch(`/control/${command}`, {
+                method: "POST"
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data);
+            });
+        }
+    </script>
+
+</body>
+</html>
