@@ -108,23 +108,24 @@ def control(web_cmd):
     global auto_mode
     print("web command:", web_cmd)
 
-    if web_cmd == 'forward':
-        motor.move_forward()
-        print("forward")
-    elif web_cmd == 'backward':
-        motor.move_backward()
-        print("backward")
-    elif web_cmd == 'left':
-        motor.turn_left_soft()
-        print("left")
-    elif web_cmd == 'right':
-        motor.turn_right_soft()
-        print("right")
-    elif web_cmd == 'stop':
-        motor.stop_motors()
-        print("stop")
+    if auto_mode == False:
+        if web_cmd == 'forward':
+            motor.move_forward()
+            print("forward")
+        elif web_cmd == 'backward':
+            motor.move_backward()
+            print("backward")
+        elif web_cmd == 'left':
+            motor.turn_left_soft()
+            print("left")
+        elif web_cmd == 'right':
+            motor.turn_right_soft()
+            print("right")
+        elif web_cmd == 'stop':
+            motor.stop_motors()
+            print("stop")
 
-    return "OK"
+        return "OK"
 
 @app.route('/mode', methods=['POST'])
 def mode():
