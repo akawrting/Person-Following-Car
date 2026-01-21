@@ -123,15 +123,6 @@ def control(web_cmd):
     elif web_cmd == 'stop':
         motor.stop_motors()
         print("stop")
-    elif web_cmd == 'power':
-        if not auto_mode:
-            auto_mode = True
-            print("auto mode on")
-        else:
-            auto_mode = False
-            time.sleep(0.2)
-            motor.stop_motors()
-            print("auto mode off")
 
     return "OK"
 
@@ -139,7 +130,7 @@ def control(web_cmd):
 def mode():
     global auto_mode
 
-    value = request.form.get('value')  # "1" 또는 "0"
+    value = request.form.get('value')  
     auto_mode = bool(int(value))
     if auto_mode == False:
         time.sleep(0.2)
