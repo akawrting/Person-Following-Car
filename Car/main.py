@@ -1,4 +1,4 @@
-from flask import Flask, Response, render_template
+from flask import Flask, Response, render_template, request
 from picamera2 import Picamera2
 import socket, time, threading, cv2
 from gpiozero import PWMOutputDevice, DigitalOutputDevice, DistanceSensor, RGBLED
@@ -36,35 +36,34 @@ def auto_following():
         if yolo_cmd == "forward":
             if front_distance > 30:
                 if left_distance < 15 and right_distance < 15:
-                    stop_motors()
+                    motor.stop_motors()
                 elif right_distance < 30:
-                        turn_left_soft()
+                        motor.turn_left_soft()
                 elif left_distance < 30:
-                        turn_right_soft()
+                        motor.turn_right_soft()
                 else:
-                    move_forward()
+                    motor.move_forward()
             
             else:
                 if left_distance > right_distance:
-                    turn_left_soft()
+                    motor.turn_left_soft()
                     time.sleep(1)
-                    move_forward()
+                    motor.move_forward()
                     time.sleep(0.2)
                 
                 else:
-                    turn_right_soft()
+                    motor.turn_right_soft()
                     time.sleep(1)
-                    move_forward()
+                    motor.move_forward()
                     time.sleep(0.2)
 
         elif yolo_cmd == "right":
-            turn_right()
-
+            motor.turn_right_soft()
         elif yolo_cmd == "left":
-            turn_left()
-        
+            motor.turn_left_soft()
+
         elif yolo_cmd == "forward_close":
-            stop_motors()
+            motor.stop_motors()
 
 
 auto_mode = False
@@ -119,7 +118,7 @@ def control(web_cmd):
         motor.turn_left_soft()
         print("left")
     elif web_cmd == 'right':
-        turn_right_soft()
+        motor.turn_right_soft()
         print("right")
     elif web_cmd == 'stop':
         motor.stop_motors()
@@ -136,7 +135,19 @@ def control(web_cmd):
 
     return "OK"
 
+@app.route('/mode', methods=['POST'])
+def mode():
+    global auto_mode
+
+    value = request.form.get('value')  # "1" 또는 "0"
+    auto_mode = bool(int(value))
+    if auto_mode == False:
+        time.sleep(0.2)
+        motor.stop_motors()
+    print("현재 auto_mode:", auto_mode)
+    return "OK"
+
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000) 

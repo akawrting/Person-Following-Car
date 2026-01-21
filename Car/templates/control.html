@@ -3,35 +3,90 @@
 <head>
     <title>Remote Control</title>
     <style>
-        /* 버튼 및 스트리밍 컨테이너 스타일링 */
         .control-container {
             text-align: center;
             margin: 20px;
         }
 
 
-        /* 버튼 스타일링 */
         .control-button {
             margin: 10px;
             padding: 10px 20px;
             font-size: 16px;
         }
         h1 {
-            text-align: center; /* 가운데 정렬 */
+            text-align: center;
         }
 
         .power_button {
             margin: 10px;
             background-color: #e74c3c;
             color: white;
-            /* border: none;
-            border-radius: 5px; */
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
         }
+
+
+
+
+
+        
+        #mode_switch {
+            position: absolute;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        .switch_label {
+            content: "OFF";
+            position: relative;
+            cursor: pointer;
+            display: inline-block;
+            width: 58px;
+            height: 28px;
+            background: #b3b0b0;
+            border: 2px solid #daa;
+            border-radius: 20px;
+            transition: 0.2s;
+        }
+        .switch_label:hover {
+            background: #918e8e;
+        }
+        .onf_btn {
+            position: absolute;
+            top: 4px;
+            left: 3px;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 20px;
+            background: #efefef;
+            transition: 0.2s;
+        }
+
+        #mode_switch:checked+.switch_label {
+            background: #c44;
+            border: 2px solid #c44;
+        }
+        #mode_switch:checked+.switch_label:hover {
+            background: #e55;
+        }
+
+        #mode_switch:checked+.switch_label .onf_btn {
+            left: 34px;
+            background: #fff;
+            box-shadow: 1px 2px 3px #00000020;
+        }
+       
     </style>
 </head>
+
+
+
+
+
 <body>
     <h1>카트 원격 조종</h1>
     <div class="control-container">
@@ -73,6 +128,18 @@
         <button id="power" class="power_button" onclick="sendCommand('power')">모드</button>
     </div>
 
+    <h1>자동 모드</h1>
+    <div class="control-container">
+        <input type="checkbox" id="mode_switch" onclick="send_mode_state()">
+        <label for="mode_switch" class="switch_label">
+            <span class="onf_btn"></span>
+        </label>
+    </div>
+
+
+
+
+
     <script>
         function sendCommand(command) {
             fetch(`/control/${command}`, {
@@ -81,6 +148,19 @@
             .then(response => response.text())
             .then(data => {
                 console.log(data);
+            });
+        }
+
+        function send_mode_state() {
+            const checkbox = document.getElementById("mode_switch");
+            const value = checkbox.checked ? 1 : 0;
+
+            const formData = new FormData();
+            formData.append("value", value);
+
+            fetch("/mode", {
+                method: "POST",
+                body: formData
             });
         }
     </script>
