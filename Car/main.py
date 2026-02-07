@@ -139,6 +139,10 @@ def mode():
     if auto_mode == False:
         time.sleep(0.2)
         motor.stop_motors()
+    elif auto_mode == True:
+        time.sleep(0.1)
+        motor.stop_motors()
+        
     print("현재 auto_mode:", auto_mode)
     return "OK"
 
