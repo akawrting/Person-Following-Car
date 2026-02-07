@@ -76,10 +76,11 @@ camera.start()
 
 
 # udp setting
-UDP_IP = "0.0.0.0"   
-UDP_PORT = 5005
+PC_IP = "192.168.0.2"   
+PC_to_Car_PORT = 5005
+Car_to_PC_PORT = 5006
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.bind((UDP_IP, UDP_PORT))
+sock.bind(("0.0.0.0", PC_to_Car_PORT))
 print("UDP server activated")
 
 thread_1 = threading.Thread(target = auto_following)
@@ -124,6 +125,8 @@ def control(web_cmd):
         elif web_cmd == 'stop':
             motor.stop_motors()
             print("stop")
+        elif web_cmd == 'reset':
+            sock.sendto(web_cmd.encode(), (PC_IP, Car_to_PC_PORT))
 
         return "OK"
 
